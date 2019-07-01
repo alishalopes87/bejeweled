@@ -38,24 +38,35 @@ class Board extends React.Component {
 		selectedRow: null
 		}
 
-	
+	find_next_non_null = (previousState,rowIndex, column) =>{
+		for(let i=rowIndex-1; i >= 0; i--){
+			if(previousState[i][column] !==null){
+				return i
+			}
+		}
+	}
+	rando = () =>{
+		return "pink"
+	 }
+
 	fillBoard = () => {
 		//shift nulls 
 		let previousState = [...this.state.squares]
 
-		for(let row = previousState.length-1; row > 0; row--){
-			for(let column in previousState[row]){
-				if(previousState[row][column] === null){
-					let i = 1
-					if(previousState[row-i]){
-						previousState[row][column] = previousState[row-i][column]
-						i -= 3
+		for(let rowIndex = previousState.length-1; rowIndex > 0; rowIndex--){
+			for(let column in previousState[rowIndex]){
+				if(previousState[rowIndex][column] === null){
+					let found = this.find_next_non_null(previousState,rowIndex,column)
+					if(found === undefined){
+						previousState[rowIndex][column] = this.rando()
 					}else{
-						 let randColumn = previousState[Math.floor(Math.random()*previousState.length)]
-						 let randRow = previousState[Math.floor(Math.random()*previousState.length)]
-						 previousState[row][column]= previousState[randRow][randColumn]
+						previousState[rowIndex][column] = previousState[found][column]
+						if(column === 0){
+							previousState[found][column] = this.rando()
+						}else{
+							previousState[found][column] = null
+						}
 					}
-					
 				}
 			}
 		}
@@ -130,6 +141,7 @@ class Board extends React.Component {
 			this.setState({selectedRow: rowIndex})
 		}
 	}
+
 
   render() {
 
