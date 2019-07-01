@@ -53,7 +53,7 @@ class Board extends React.Component {
 		//shift nulls 
 		let previousState = [...this.state.squares]
 
-		for(let rowIndex = previousState.length-1; rowIndex > 0; rowIndex--){
+		for(let rowIndex = previousState.length-1; rowIndex >= 0; rowIndex--){
 			for(let column in previousState[rowIndex]){
 				if(previousState[rowIndex][column] === null){
 					let found = this.find_next_non_null(previousState,rowIndex,column)
@@ -142,6 +142,13 @@ class Board extends React.Component {
 		}
 	}
 
+	handleRefresh = ()=>{
+		let prevBoard = [...this.state.squares]
+		this.setState({
+			squares: Shuffle(prevBoard)
+		})
+
+	}
 
   render() {
 
@@ -152,18 +159,18 @@ class Board extends React.Component {
 			<div key={rowIndex} className="board-row">
 				{row.map((square, index)=>{
 				 return <Square onClick={ e => {
-				 	console.log('this is row', rowIndex)
-				 	console.log('this is column', index)
 				 	this.handleSelect(index,rowIndex)
 				 } } value={square}key={index}/>
 				})}
 			</div>
-
     	)
     })
     return(
-
-    	board
+    	<div>
+    	{ board }
+    	<button onClick={this.handleRefresh}>Refresh</button>
+		</div>
+    	
     ) 
   }
 
