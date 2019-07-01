@@ -1,29 +1,14 @@
 import React from 'react';
 import Square from './Square'
+import * as utils from '../utils.js'
 
 
-function Shuffle(array) {
-    for (var k = 0; k < array.length; k++) {
-        var i = array[k].length;
-        if (i === 0)
-            return false;
-        else {
-            while (--i) {
-                var j = Math.floor(Math.random() * (i + 1));
-                var tempi = array[k][i];
-                var tempj = array[k][j];
-                array[k][i] = tempj;
-                array[k][j] = tempi;
-            }
-        }
-    }
-    return array
-}
+
 
 class Board extends React.Component {
 
 		state = {
-		squares: Shuffle([
+		squares: utils.Shuffle([
 		  ['green', 'orange', 'red', 'green', 'yellow', 'blue', 'white', 'blue'],
 		  ['purple', 'orange', 'red', 'green', 'yellow', 'blue', 'white', 'blue'],
 		  ['purple', 'orange', 'red', 'green', 'yellow', 'blue', 'white', 'blue'],
@@ -38,18 +23,6 @@ class Board extends React.Component {
 		selectedRow: null
 		}
 
-	find_next_non_null = (previousState,rowIndex, column) =>{
-		for(let i=rowIndex-1; i >= 0; i--){
-			if(previousState[i][column] !==null){
-				return i
-			}
-		}
-	}
-	rando = () =>{
-		const colors = ['purple', 'orange', 'red', 'green', 'yellow', 'blue', 'white', 'blue']
-		let randomColor = colors[Math.floor(Math.random()*colors.length)];
-		return randomColor
-	 }
 
 	fillBoard = () => {
 		//shift nulls 
@@ -58,9 +31,9 @@ class Board extends React.Component {
 		for(let rowIndex = previousState.length-1; rowIndex >= 0; rowIndex--){
 			for(let column in previousState[rowIndex]){
 				if(previousState[rowIndex][column] === null){
-					let found = this.find_next_non_null(previousState,rowIndex,column)
+					let found = utils.find_next_non_null(previousState,rowIndex,column)
 					if(found === undefined){
-						previousState[rowIndex][column] = this.rando()
+						previousState[rowIndex][column] = utils.rando()
 					}else{
 						previousState[rowIndex][column] = previousState[found][column]
 						previousState[found][column] = null
@@ -85,6 +58,8 @@ class Board extends React.Component {
 					toChange.push({row: row, column: column})
 					toChange.push({row: row + 1, column:column})
 					toChange.push({row: row + 2, column: column})
+					//this.checkForMatch(row+1,column)
+					//this.checkForMatch(row+2, column)
 				}
 			}
 		}
@@ -94,6 +69,8 @@ class Board extends React.Component {
 					toChange.push({row: row, column: column})
 					toChange.push({row: row - 1, column:column})
 					toChange.push({row: row - 2, column: column})
+					//this.checkForMatch(row-1, column)
+					//this.checkForMatch(row-2,column)
 				}
 			}
 		}
@@ -104,6 +81,8 @@ class Board extends React.Component {
 					toChange.push({row: row, column: column })
 					toChange.push({row: row, column:column + 1})
 					toChange.push({row: row, column: column + 2})
+					//this.checkForMatch(row,column+1)
+					//this.checkForMatch(row,column+2)
 				}
 			}
 			if(squares[row][column -1] && squares[row ][column -2]){
@@ -111,6 +90,8 @@ class Board extends React.Component {
 					toChange.push({row: row, column: column })
 					toChange.push({row: row, column:column - 1})
 					toChange.push({row: row, column: column - 2})
+					//this.checkForMatch(row, column-1)
+					//this.checkForMatch(row,column-2)
 				}
 			}
 		}
@@ -148,7 +129,7 @@ class Board extends React.Component {
 	handleRefresh = ()=>{
 		let prevBoard = [...this.state.squares]
 		this.setState({
-			squares: Shuffle(prevBoard)
+			squares: utils.Shuffle(prevBoard)
 		})
 
 	}
