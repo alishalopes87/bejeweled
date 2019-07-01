@@ -46,7 +46,9 @@ class Board extends React.Component {
 		}
 	}
 	rando = () =>{
-		return "pink"
+		const colors = ['purple', 'orange', 'red', 'green', 'yellow', 'blue', 'white', 'blue']
+		let randomColor = colors[Math.floor(Math.random()*colors.length)];
+		return randomColor
 	 }
 
 	fillBoard = () => {
@@ -61,11 +63,8 @@ class Board extends React.Component {
 						previousState[rowIndex][column] = this.rando()
 					}else{
 						previousState[rowIndex][column] = previousState[found][column]
-						if(column === 0){
-							previousState[found][column] = this.rando()
-						}else{
-							previousState[found][column] = null
-						}
+						previousState[found][column] = null
+						
 					}
 				}
 			}
@@ -74,11 +73,11 @@ class Board extends React.Component {
 			squares: previousState
 		})
 	}
-	checkForMatch = () =>{
+	checkForMatch = (row,column) =>{
 		//vertical check
 		let squares = [...this.state.squares]
-		let row = this.state.selectedRow
-		let column = this.state.selectedColumn
+		// let row = this.state.selectedRow
+		// let column = this.state.selectedColumn
 		let toChange = []
 		if(squares[row + 1] && squares[row + 2]){
 			if(squares[row + 1][column] && squares[row + 2][column]){
@@ -129,14 +128,18 @@ class Board extends React.Component {
 	}
 
 	handleSelect =(index, rowIndex) =>{
-		if(this.state.selectedColumn && this.state.selectedRow){
+		if(this.state.selectedColumn !== null && this.state.selectedRow !== null){
 			let previousState = [...this.state.squares]
 			let previous = previousState[this.state.selectedRow][this.state.selectedColumn]
 			previousState[this.state.selectedRow][this.state.selectedColumn] = previousState[rowIndex][index]
 			previousState[rowIndex][index] = previous
-			this.checkForMatch()
+			this.checkForMatch(rowIndex,index)
+			let row = this.state.selectedRow
+			let column = this.state.selectedColumn
+			this.checkForMatch(row,column)
 			this.setState({ squares: previousState, selectedRow: null, selectedRow: null })
 		}else{
+
 			this.setState({ selectedColumn: index } )
 			this.setState({selectedRow: rowIndex})
 		}
