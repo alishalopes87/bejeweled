@@ -4,7 +4,6 @@ import * as utils from '../utils.js'
 
 
 
-
 class Board extends React.Component {
 
 		state = {
@@ -46,66 +45,13 @@ class Board extends React.Component {
 			squares: previousState
 		})
 	}
-	checkForMatch = (row,column) =>{
-		//vertical check
-		let squares = [...this.state.squares]
-		// let row = this.state.selectedRow
-		// let column = this.state.selectedColumn
-		let toChange = []
-		if(squares[row + 1] && squares[row + 2]){
-			if(squares[row + 1][column] && squares[row + 2][column]){
-				if (squares[row][column]=== squares[row + 1][column] && squares[row + 2][column]){
-					toChange.push({row: row, column: column})
-					toChange.push({row: row + 1, column:column})
-					toChange.push({row: row + 2, column: column})
-					//this.checkForMatch(row+1,column)
-					//this.checkForMatch(row+2, column)
-				}
-			}
-		}
-		if(squares[row - 1] && squares[row - 2]){
-			if(squares[row - 1][column] && squares[row - 2][column]){
-				if (squares[row][column]=== squares[row - 1][column] && squares[row - 2][column]){
-					toChange.push({row: row, column: column})
-					toChange.push({row: row - 1, column:column})
-					toChange.push({row: row - 2, column: column})
-					//this.checkForMatch(row-1, column)
-					//this.checkForMatch(row-2,column)
-				}
-			}
-		}
-		//horizontal check
-		if(squares[row]){
-			if(squares[row][column +1] && squares[row ][column +2]){
-				if(squares[row][column] === squares[row][column +1] && squares[row ][column +2]){
-					toChange.push({row: row, column: column })
-					toChange.push({row: row, column:column + 1})
-					toChange.push({row: row, column: column + 2})
-					//this.checkForMatch(row,column+1)
-					//this.checkForMatch(row,column+2)
-				}
-			}
-			if(squares[row][column -1] && squares[row ][column -2]){
-				if(squares[row][column] === squares[row][column -1] && squares[row ][column -2]){
-					toChange.push({row: row, column: column })
-					toChange.push({row: row, column:column - 1})
-					toChange.push({row: row, column: column - 2})
-					//this.checkForMatch(row, column-1)
-					//this.checkForMatch(row,column-2)
-				}
-			}
-		}
-		
-		for(let i=0; i < toChange.length; i++){
-			let pair = toChange[i]
-			let row = pair.row
-			let column = pair.column
-
-			squares[row][column] = null
-		}
-
-		this.setState({ squares: squares })
-		this.fillBoard()
+	checkForMatch = () =>{
+		let updatedSquares = null
+		do {
+			updatedSquares = utils.findMatches(this.state.squares)
+			this.setState({ squares: updatedSquares })
+			this.fillBoard()
+		} while(updatedSquares !== null)
 	}
 
 	handleSelect =(index, rowIndex) =>{
@@ -114,10 +60,7 @@ class Board extends React.Component {
 			let previous = previousState[this.state.selectedRow][this.state.selectedColumn]
 			previousState[this.state.selectedRow][this.state.selectedColumn] = previousState[rowIndex][index]
 			previousState[rowIndex][index] = previous
-			this.checkForMatch(rowIndex,index)
-			let row = this.state.selectedRow
-			let column = this.state.selectedColumn
-			this.checkForMatch(row,column)
+			this.checkForMatch()
 			this.setState({ squares: previousState, selectedRow: null, selectedRow: null })
 		}else{
 
