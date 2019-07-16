@@ -99,12 +99,3 @@ export const null_matches =(squares, toChange)=>{
     return squares
 }
 
-// const testBoard = [
-//   ['k', '1', 'a'],
-//   ['f', '2', 'a'],
-//   ['g', 'a', 'a'],
-// ]
-
-// const test1 = findMatches(testBoard)
-
-// console.log(test1)

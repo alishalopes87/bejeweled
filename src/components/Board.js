@@ -95,7 +95,7 @@ class Board extends React.Component {
     return(
     	<div>
     	{ board }
-    	<button onClick={this.handleRefresh}>Refresh</button>
+    	<button onClick={this.handleRefresh}>New Game</button>
 		</div>
     	
     ) 
